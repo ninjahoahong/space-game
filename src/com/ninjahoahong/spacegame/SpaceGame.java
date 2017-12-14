@@ -22,9 +22,6 @@ public class SpaceGame extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         Spatial spaceship = assetManager.loadModel("Models/SpaceShip/ApolloLunar.obj");
-        Material mat_default = new Material(
-            assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
-        spaceship.setMaterial(mat_default);
         rootNode.attachChild(spaceship);
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
