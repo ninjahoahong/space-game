@@ -16,7 +16,7 @@ public class SpaceGame extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        Spatial spaceship = assetManager.loadModel("Models/SpaceShip/ApolloLunar.obj");
+        Spatial spaceship = assetManager.loadModel("Models/SpaceShip/ApolloLunar.j3o");
         rootNode.attachChild(spaceship);
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-0.1f, -0.7f, -1.0f));
