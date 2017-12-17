@@ -25,6 +25,7 @@ public class SpaceGame extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
+        flyCam.setEnabled(false);
         spaceship = assetManager.loadModel("Models/SpaceShip/ApolloLunar.j3o");
         rootNode.attachChild(spaceship);
         DirectionalLight sun = new DirectionalLight();
