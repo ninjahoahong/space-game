@@ -42,16 +42,22 @@ public class SpaceGame extends SimpleApplication {
     private static final Box floor;
 
     /** dimensions used for bricks and wall */
-    private static final float brickLength = 0.48f;
-    private static final float brickWidth  = 0.24f;
-    private static final float brickHeight = 0.12f;
+    private static final float brickLength = 0.2f;
+    private static final float brickWidth  = 0.2f;
+    private static final float brickHeight = 0.2f;
 
     private RigidBodyControl    floor_phy;
+    private RigidBodyControl    spaceship_phy;
+    private RigidBodyControl    brick_phy;
+    private static final Box    box;
     
     static {
         /** Initialize the floor geometry */
         floor = new Box(10f, 0.1f, 5f);
         floor.scaleTextureCoordinates(new Vector2f(3, 6));
+        /** Initialize the brick geometry */
+        box = new Box(brickLength, brickHeight, brickWidth);
+        box.scaleTextureCoordinates(new Vector2f(1f, .5f));
     }
     
     protected Spatial spaceship;
@@ -65,27 +71,14 @@ public class SpaceGame extends SimpleApplication {
         stateManager.attach(bulletAppState);
 
         /** Configure cam to look at scene */
-        cam.setLocation(new Vector3f(0, 4f, 6f));
-        cam.lookAt(new Vector3f(2, 2, 0), Vector3f.UNIT_Y);
+        cam.setLocation(new Vector3f(0, 1f, 4f));
+        flyCam.setEnabled(false);
+        //cam.lookAt(new Vector3f(0, 2, 0), Vector3f.UNIT_Y);
         
         initMaterials();
+        initSpaceship();
+        initBrick();
         initFloor();
-        
-        spaceship = assetManager.loadModel("Models/SpaceShip/ApolloLunar.j3o");
-        spaceship.setLocalTranslation(new Vector3f(0f, 0f, 7f));
-        CollisionShape shape =
-    CollisionShapeFactory.createDynamicMeshShape(spaceship);
-        RigidBodyControl spaceshipPhys =
-    new RigidBodyControl( shape , 0.0f );
-        spaceship.addControl(spaceshipPhys);
-        bulletAppState.getPhysicsSpace().add(spaceshipPhys);
-        
-        rootNode.attachChild(spaceship);
-          
-        fly = assetManager.loadModel("Models/SpaceShip/ApolloLunar.j3o");
-        fly.scale(2f, 2f, 2f);
-        fly.setLocalTranslation(new Vector3f(0f, 0f, 2f));
-        rootNode.attachChild(fly);
         
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-1f, -1f, -7f));
@@ -102,7 +95,7 @@ public class SpaceGame extends SimpleApplication {
         inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_P));
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_H));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_K));
-        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_J));
+        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_U));
         // Add the names to the action listener.
         inputManager.addListener(actionListener, "Pause");
@@ -124,7 +117,9 @@ public class SpaceGame extends SimpleApplication {
             if (isFlying) {
                 if (name.equals("Up")) {
                     Vector3f v = spaceship.getLocalTranslation();
-                    spaceship.setLocalTranslation(v.x, v.y - value * speed, v.z);
+                    //spaceship.setLocalTranslation(v.x, v.y - value * speed, v.z);
+                    Vector3f vector = new Vector3f(0, 1, 0);
+                    brick_phy.setLinearVelocity(vector);    
                 }
                 if (name.equals("Down")) {
                     Vector3f v = spaceship.getLocalTranslation();
@@ -176,5 +171,34 @@ public class SpaceGame extends SimpleApplication {
     floor_phy = new RigidBodyControl(0.0f);
     floor_geo.addControl(floor_phy);
     bulletAppState.getPhysicsSpace().add(floor_phy);
+  }
+  
+  public void initSpaceship(){
+    spaceship = assetManager.loadModel("Models/SpaceShip/ApolloLunar.j3o");
+    this.rootNode.attachChild(spaceship);
+    
+    spaceship.setLocalTranslation(new Vector3f(0f, 0f, 0f));
+    /** Make brick physical with a mass > 0.0f. */
+    spaceship_phy = new RigidBodyControl(2f);
+    /** Add physical brick to physics space. */
+    //spaceship.addControl(spaceship_phy);
+    //bulletAppState.getPhysicsSpace().add(spaceship_phy);
+  }
+  
+  public void initBrick(){
+      /** Create a brick geometry and attach to scene graph. */
+    Geometry brick_geo = new Geometry("brick", box);
+    Material mat = new Material(assetManager,
+          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material
+        mat.setColor("Color", ColorRGBA.Blue);   // set color of material to blue
+    brick_geo.setMaterial(mat);
+    rootNode.attachChild(brick_geo);
+    /** Position the brick geometry  */
+    brick_geo.setLocalTranslation(new Vector3f(0f, 10f, 1f));
+    /** Make brick physical with a mass > 0.0f. */
+    brick_phy = new RigidBodyControl(2f);
+    /** Add physical brick to physics space. */
+    brick_geo.addControl(brick_phy);
+    bulletAppState.getPhysicsSpace().add(brick_phy);
   }
 }
