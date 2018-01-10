@@ -71,8 +71,9 @@ public class SpaceGame extends SimpleApplication {
         stateManager.attach(bulletAppState);
 
         /** Configure cam to look at scene */
-        cam.setLocation(new Vector3f(0, 1f, 4f));
+        cam.setLocation(new Vector3f(0, 2f, 8f));
         flyCam.setEnabled(false);
+        camNode = new CameraNode("Camera Node", cam);
         //cam.lookAt(new Vector3f(0, 2, 0), Vector3f.UNIT_Y);
         
         initMaterials();
@@ -170,6 +171,7 @@ public class SpaceGame extends SimpleApplication {
     /* Make the floor physical with mass 0.0f! */
     floor_phy = new RigidBodyControl(0.0f);
     floor_geo.addControl(floor_phy);
+    floor_geo.getControl(RigidBodyControl.class).setRestitution(0.5f);
     bulletAppState.getPhysicsSpace().add(floor_phy);
   }
   
@@ -199,6 +201,7 @@ public class SpaceGame extends SimpleApplication {
     brick_phy = new RigidBodyControl(2f);
     /** Add physical brick to physics space. */
     brick_geo.addControl(brick_phy);
+    brick_geo.getControl(RigidBodyControl.class).setRestitution(1.0f);
     bulletAppState.getPhysicsSpace().add(brick_phy);
   }
 }
