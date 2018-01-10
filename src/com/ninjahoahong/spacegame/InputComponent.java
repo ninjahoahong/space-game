@@ -1,6 +1,6 @@
 package com.ninjahoahong.spacegame;
 
 
-public interface InputComponent {
+public class InputComponent extends Component {
     
 }

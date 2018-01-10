@@ -31,8 +31,6 @@ public class SpaceGame extends SimpleApplication {
         app.start();
     }
     
-   
-
     /** Prepare Materials */
     Material wall_mat;
     Material stone_mat;
@@ -40,6 +38,7 @@ public class SpaceGame extends SimpleApplication {
 
     /** Prepare geometries and physical nodes for bricks and cannon balls. */
     private static final Box floor;
+    private static final Entity newFloor;
 
     /** dimensions used for bricks and wall */
     private static final float brickLength = 0.2f;
@@ -58,6 +57,8 @@ public class SpaceGame extends SimpleApplication {
         /** Initialize the brick geometry */
         box = new Box(brickLength, brickHeight, brickWidth);
         box.scaleTextureCoordinates(new Vector2f(1f, .5f));
+        newFloor = new Entity();
+        newFloor.addComponent(new PositionComponent(10f, 0.1f, 5f));
     }
     
     protected Spatial spaceship;
@@ -73,7 +74,6 @@ public class SpaceGame extends SimpleApplication {
         /** Configure cam to look at scene */
         cam.setLocation(new Vector3f(0, 2f, 8f));
         flyCam.setEnabled(false);
-        camNode = new CameraNode("Camera Node", cam);
         //cam.lookAt(new Vector3f(0, 2, 0), Vector3f.UNIT_Y);
         
         initMaterials();
